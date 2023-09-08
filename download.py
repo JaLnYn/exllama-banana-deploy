@@ -1,11 +1,22 @@
-# This file runs during container build time to get model weights built into the container
+from transformers import AutoTokenizer
+from auto_gptq import AutoGPTQForCausalLM
 
-# In this example: A Huggingface BERT model
-from transformers import pipeline
+# MODEL = "TheBloke/llama2_70b_chat_uncensored-GPTQ"
 
-def download_model():
-    # do a dry run of loading the huggingface model, which will download weights
-    pipeline('fill-mask', model='bert-base-uncased')
+MODEL = "TheBloke/Llama-2-7b-Chat-GPTQ"
+
+def download_model() -> tuple:
+    """Download the model and tokenizer."""
+    tokenizer = AutoTokenizer.from_pretrained(MODEL, use_fast=True)
+    model = AutoGPTQForCausalLM.from_quantized(MODEL,
+            use_safetensors=True,
+            trust_remote_code=False,
+            device="cuda:0",
+            use_triton=False,
+            quantize_config=None,
+            inject_fused_attention=False)
+    return model, tokenizer
 
 if __name__ == "__main__":
     download_model()
+    
