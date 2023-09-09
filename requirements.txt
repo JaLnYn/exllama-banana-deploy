@@ -1,5 +1,5 @@
 potassium
 torch
 transformers
-git+https://github.com/jllllll/exllama
+exllama @ git+https://github.com/jllllll/exllama
 
